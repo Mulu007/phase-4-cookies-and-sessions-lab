@@ -8,7 +8,14 @@ class ArticlesController < ApplicationController
 
   def show
     article = Article.find(params[:id])
-    render json: article
+    session[:page_views] ||= 0
+    session[:page_views] += 1
+    if session[:page_views] >= 3
+      render json: {error: "unauthorized"}, status: :unauthorized
+    else
+      render json: article
+    end
+    byebug
   end
 
   private
